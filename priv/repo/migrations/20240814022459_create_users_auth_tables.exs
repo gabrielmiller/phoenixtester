@@ -10,6 +10,12 @@ defmodule Phoenixtester.Repo.Migrations.CreateUsersAuthTables do
       add :hashed_password, :string, null: false
       add :confirmed_at, :utc_datetime
 
+      add(
+        :organization_id,
+        references(:organizations, column: :organization_id, on_delete: :delete_all, type: :uuid),
+        null: false
+      )
+
       timestamps(type: :utc_datetime)
     end
 
@@ -25,6 +31,7 @@ defmodule Phoenixtester.Repo.Migrations.CreateUsersAuthTables do
       timestamps(type: :utc_datetime, updated_at: false)
     end
 
+    create(index(:users, [:organization_id]))
     create index(:users_tokens, [:user_id])
     create unique_index(:users_tokens, [:context, :token])
   end

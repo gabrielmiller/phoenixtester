@@ -10,6 +10,8 @@ defmodule Phoenixtester.Accounts.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
 
+    belongs_to(:organization, Phoenixtester.Accounts.Organization, references: :organization_id)
+
     timestamps(type: :utc_datetime)
   end
 
@@ -82,7 +84,9 @@ defmodule Phoenixtester.Accounts.User do
   defp maybe_validate_unique_email(changeset, opts) do
     if Keyword.get(opts, :validate_email, true) do
       changeset
-      |> unsafe_validate_unique(:email, Phoenixtester.Repo)
+      |> unsafe_validate_unique(:email, Phoenixtester.Repo,
+        repo_opts: [skip_organization_id: true]
+      )
       |> unique_constraint(:email)
     else
       changeset

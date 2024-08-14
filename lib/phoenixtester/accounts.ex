@@ -443,7 +443,17 @@ defmodule Phoenixtester.Accounts do
       %Ecto.Changeset{data: %Organization{}}
 
   """
-  def change_organization(%Organization{} = organization, attrs \\ %{}) do
-    Organization.changeset(organization, attrs)
+  def change_organization_registration(%Organization{} = organization, attrs \\ %{}) do
+    Organization.registration_changeset(organization, attrs,
+      hash_password: false,
+      validate_email: false,
+      validate_domain_uniqueness: false
+    )
+  end
+
+  def register_organization(attrs) do
+    %Organization{}
+    |> Organization.registration_changeset(attrs)
+    |> Repo.insert()
   end
 end

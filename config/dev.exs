@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :phoenixtester, Phoenixtester.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "pt_user",
+  password: "dev_password",
   hostname: "localhost",
-  database: "phoenixtester_dev",
+  database: "pt_dev_db",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

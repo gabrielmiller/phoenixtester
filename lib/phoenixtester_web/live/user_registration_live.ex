@@ -19,30 +19,22 @@ defmodule PhoenixtesterWeb.UserRegistrationLive do
         </:subtitle>
       </.header>
 
-      <.simple_form
-        for={@form}
-        id="registration_form"
-        phx-submit="save"
-        phx-change="validate"
-        phx-trigger-action={@trigger_submit}
-        action={~p"/organizations/log_in?_action=registered"}
-        method="post"
-      >
+      <.form for={@form} id="registration_form" phx-submit="save" phx-change="validate" method="post">
         <.error :if={@check_errors}>
           Oops, something went wrong! Please check the errors below.
         </.error>
 
-        <.input field={@form[:name]} type="text" label="Organization title" />
+        <.input field={@form[:title]} type="text" label="Organization title" />
         <.input field={@form[:domain]} type="text" label="Organization domain" />
         <.inputs_for :let={user_form} field={@form[:users]}>
           <.input field={user_form[:email]} type="email" label="Email" />
           <.input field={user_form[:password]} type="password" label="Password" />
         </.inputs_for>
 
-        <:actions>
+        <div class="mt-2 flex items-center justify-between gap-6">
           <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
-        </:actions>
-      </.simple_form>
+        </div>
+      </.form>
     </div>
     """
   end
@@ -70,8 +62,10 @@ defmodule PhoenixtesterWeb.UserRegistrationLive do
             &url(~p"/users/confirm/#{&1}")
           )
 
-        changeset = Accounts.change_organization_registration(organization)
-        {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset)}
+        {:noreply,
+         redirect(socket |> put_flash(:info, "Check your email to confirm your account."),
+           to: ~p"/users/confirm"
+         )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(check_errors: true) |> assign_form(changeset)}

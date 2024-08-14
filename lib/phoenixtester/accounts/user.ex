@@ -75,7 +75,8 @@ defmodule Phoenixtester.Accounts.User do
       # Hashing could be done with `Ecto.Changeset.prepare_changes/2`, but that
       # would keep the database transaction open longer and hurt performance.
       |> put_change(:hashed_password, Bcrypt.hash_pwd_salt(password))
-      |> delete_change(:password)
+
+      # |> delete_change(:password)
     else
       changeset
     end
